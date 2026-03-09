@@ -267,6 +267,11 @@ export default function Home() {
                                         <Image className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="Azkar" width={400} height={400} src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUIkq0uOG1vdbH07p0ii9lZPsmWe4ZRQTaxRGqx5SGvFCJ0sIhkhSL4aAxszshz1aY2Tp1tHI3L2PioHjKy3q0mFZZxGHeY-x-6BrV6HJD8XN4aVht73oir4zuhQnn9HiZwhBaplOOFOpa2sZxqPlgsQuXppL9_jsVG4OBQn_nEiTHy7wNYwkLgnxP_f3hIkHClFKtWndbCy0Mfhic13FAgI6UPrPkW4X4cryYgzC7Ewn1uGAvEBAzD6BrR3xdFpWdGftr0n9e2sQ" />
                                         <p className="absolute bottom-4 right-4 z-20 text-white font-bold text-lg">الأذكار</p>
                                     </Link>
+                                    <Link href="/khatma" className="group relative aspect-square rounded-lg overflow-hidden cursor-pointer shadow-lg">
+                                        <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent z-10"></div>
+                                        <Image className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="Khatma" width={400} height={400} src="/khatma.png" />
+                                        <p className="absolute bottom-4 right-4 z-20 text-white font-bold text-lg">ختمة القرآن</p>
+                                    </Link>
                                 </div>
                             </div>
 

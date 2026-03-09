@@ -52,6 +52,7 @@ export default function Navbar() {
                         <Link className="text-slate-600 dark:text-slate-300 hover:text-primary transition-colors text-sm font-medium" href="/duas">الأدعية</Link>
                         <Link className="text-slate-600 dark:text-slate-300 hover:text-primary transition-colors text-sm font-medium" href="/imsakiya">الإمساكية</Link>
                         <Link className="text-slate-600 dark:text-slate-300 hover:text-primary transition-colors text-sm font-medium" href="/qibla">القبلة</Link>
+                        <Link className="text-slate-600 dark:text-slate-300 hover:text-primary transition-colors text-sm font-medium" href="/khatma">الختمة</Link>
                     </nav>
 
                     <div className="flex items-center gap-4">
