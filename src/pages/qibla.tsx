@@ -61,7 +61,7 @@ export default function QiblaPage() {
             <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display transition-colors duration-300">
                 <Navbar />
 
-                <main className="flex-1 flex flex-col items-center justify-center p-6 lg:p-12">
+                <main className="flex-1 mt-20 flex flex-col items-center justify-center p-6 lg:p-12">
                     <div className="text-center mb-12">
                         <h1 className="text-4xl font-black mb-4">بوصلة القبلة</h1>
                         <p className="text-slate-500 dark:text-slate-400 max-w-md mx-auto">

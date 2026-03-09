@@ -38,7 +38,7 @@ export default function DuasPage() {
             <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display transition-colors duration-300">
                 <Navbar />
 
-                <main className="flex-1 max-w-[1440px] mx-auto w-full px-4 lg:px-40 py-12">
+                <main className="flex-1 mt-20 max-w-[1440px] mx-auto w-full px-4 lg:px-40 py-12">
                     <div className="mb-12 text-center md:text-right">
                         <h1 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-4">الأدعية المأثورة</h1>
                         <p className="text-slate-600 dark:text-slate-400 text-lg max-w-2xl leading-relaxed">

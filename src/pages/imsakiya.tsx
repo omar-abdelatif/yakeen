@@ -20,10 +20,14 @@ export default function ImsakiyaPage() {
 
                     setStatus("جاري تحميل بيانات رمضان...");
                     try {
-                        const res = await fetch(`https://islamicapi.com/api/v1/ramadan/?lat=${lat}&lon=${lon}&api_key=${apiKey}`);
+                        const method = process.env.NEXT_PUBLIC_PRAYER_TIME_METHOD || 5;
+                        const school = process.env.NEXT_PUBLIC_PRAYER_TIME_SCHOOL || 1;
+                        const res = await fetch(`https://islamicapi.com/api/v1/ramadan/?lat=${lat}&lon=${lon}&api_key=${apiKey}&method=${method}&school=${school}`);
                         const json = await res.json();
-                        if (json.status === "success" && json.data.fasting) {
-                            setRamadanData(json.data.fasting);
+                        
+                        const data = json.data || json;
+                        if (data.fasting) {
+                            setRamadanData(data.fasting);
                         } else {
                             setStatus("خطأ في تحميل البيانات من المصدر");
                         }
@@ -54,6 +58,7 @@ export default function ImsakiyaPage() {
     const formatTime = (timeStr: string) => {
         if (!timeStr) return '';
         const [h, m] = timeStr.split(':');
+        if (!h || !m) return timeStr;
         let hours = parseInt(h, 10);
         const ampm = hours >= 12 ? 'م' : 'ص';
         hours = hours % 12 || 12;
@@ -69,7 +74,7 @@ export default function ImsakiyaPage() {
             <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display transition-colors duration-300">
                 <Navbar />
 
-                <main className="flex-1 max-w-[1200px] mx-auto w-full px-4 lg:px-10 py-12">
+                <main className="flex-1 mt-20 max-w-[1200px] mx-auto w-full px-4 lg:px-10 py-12">
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
                         <div className="flex flex-col gap-2">
                             <div className="flex items-center gap-2 text-primary">

@@ -10,7 +10,7 @@ export default function AboutPage() {
             </Head>
             <div className="relative flex min-h-screen w-full flex-col bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 transition-colors duration-300">
                 <Navbar />
-                <main className="flex-1 max-w-4xl mx-auto px-6 py-20 text-right" dir="rtl">
+                <main className="flex-1 mt-20 max-w-4xl mx-auto px-6 py-20 text-right" dir="rtl">
                     <h1 className="text-5xl font-black text-primary mb-8 animate-in slide-in-from-bottom duration-500">عن يقين</h1>
                     <div className="space-y-8 text-lg leading-relaxed text-slate-600 dark:text-slate-300">
                         <section className="bg-white dark:bg-surface-dark p-8 rounded-3xl border border-primary/10 shadow-sm">

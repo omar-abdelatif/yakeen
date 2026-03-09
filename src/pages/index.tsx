@@ -33,18 +33,30 @@ export default function Home() {
     useEffect(() => {
         const fetchPrayerTimes = async (lat: number, lon: number) => {
             const apiKey = process.env.NEXT_PUBLIC_ISLAMICAPI_KEY;
+            const method = process.env.NEXT_PUBLIC_PRAYER_TIME_METHOD || 5;
+            const school = process.env.NEXT_PUBLIC_PRAYER_TIME_SCHOOL || 1;
+            
             try {
-                const res = await fetch(`https://islamicapi.com/api/v1/prayer-time/?lat=${lat}&lon=${lon}&api_key=${apiKey}`);
+                const res = await fetch(`https://islamicapi.com/api/v1/prayer-time/?lat=${lat}&lon=${lon}&api_key=${apiKey}&method=${method}&school=${school}`);
                 const json = await res.json();
-                if (json.status === "success" && json.data.prayer_times) {
-                    setPrayerTimes(json.data.prayer_times);
-                    setDateHijri({
-                        day: json.data.date.hijri_date.split('-')[2],
-                        month: { ar: json.data.date.hijri_month_name_ar },
-                        year: json.data.date.hijri_date.split('-')[0],
-                        weekday: { ar: json.data.date.day_name_ar }
-                    });
-                    setDateGregorian(json.data.date.gregorian_date);
+                
+                const data = json.data || json;
+                const pTimes = data.times || data.prayer_times || data.prayer_time;
+
+                if (pTimes) {
+                    setPrayerTimes(pTimes);
+                    if (data.date) {
+                        const hDate = data.date.hijri?.date || data.date.hijri_date;
+                        setDateHijri({
+                            day: hDate?.split('-')[2] || '',
+                            month: { ar: data.date.hijri?.month?.ar || data.date.hijri_month_name_ar || '' },
+                            year: hDate?.split('-')[0] || '',
+                            weekday: { ar: data.date.hijri?.weekday?.ar || data.date.day_name_ar || '' }
+                        });
+                        setDateGregorian(data.date.gregorian?.date || data.date.gregorian_date);
+                    }
+                } else {
+                    console.warn("Prayer times not found in response:", json);
                 }
             } catch (e) {
                 console.error("Prayer times error:", e);
@@ -58,26 +70,29 @@ export default function Home() {
                 fetchPrayerTimes(lat, lon);
 
                 const apiKey = process.env.NEXT_PUBLIC_ISLAMICAPI_KEY;
+                const method = process.env.NEXT_PUBLIC_PRAYER_TIME_METHOD || 5;
+                const school = process.env.NEXT_PUBLIC_PRAYER_TIME_SCHOOL || 1;
                 try {
-                    const res = await fetch(`https://islamicapi.com/api/v1/ramadan/?lat=${lat}&lon=${lon}&api_key=${apiKey}`);
+                    const res = await fetch(`https://islamicapi.com/api/v1/ramadan/?lat=${lat}&lon=${lon}&api_key=${apiKey}&method=${method}&school=${school}`);
                     const json = await res.json();
-                    if (json.status === "success" && json.data.fasting) {
-                        setRamadanSummary(json.data.fasting.slice(0, 6));
+                    const data = json.data || json;
+                    if (data.fasting) {
+                        setRamadanSummary(data.fasting.slice(0, 6));
                     }
                 } catch (e) {}
             }, () => {
                 fetchPrayerTimes(30.0444, 31.2357); // Cairo Fallback
             });
+        } else {
+            fetchPrayerTimes(30.0444, 31.2357); // Cairo Fallback
         }
 
-        fetch('https://quran.yousefheiba.com/api/duas')
-            .then(r => r.json())
-            .then(data => {
-                const duas = data.prophetic_duas || [];
-                if (duas.length > 0) {
-                    setRandomDua(duas[Math.floor(Math.random() * duas.length)].text);
-                }
-            }).catch(e => console.error(e));
+        fetch('https://quran.yousefheiba.com/api/duas').then(r => r.json()).then(data => {
+            const duas = data.prophetic_duas || [];
+            if (duas.length > 0) {
+                setRandomDua(duas[Math.floor(Math.random() * duas.length)].text);
+            }
+        }).catch(e => console.error(e));
     }, []);
 
     const toggleRadio = () => {
@@ -110,6 +125,7 @@ export default function Home() {
     const formatTime = (timeStr: string) => {
         if (!timeStr) return '';
         const [h, m] = timeStr.split(':');
+        if (!h || !m) return timeStr;
         let hours = parseInt(h, 10);
         const ampm = hours >= 12 ? 'PM' : 'AM';
         hours = hours % 12 || 12;
@@ -119,18 +135,29 @@ export default function Home() {
     const getNextPrayerCountdown = () => {
         if (!prayerTimes) return { name: '', diffMs: 0 };
         const now = time;
-        const times = Object.entries(prayerTimes).filter(([name]) => name !== 'Sunrise');
-        let nextPrayerDef = times[0]; 
+        // Filter out non-prayer keys if possible, focusing on main ones
+        const keys = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+        const times = Object.entries(prayerTimes).filter(([name]) => keys.includes(name));
+        
+        if (times.length === 0) return { name: '', diffMs: 0 };
+
+        let nextPrayerDef: any = null; 
         let minDiff = Infinity;
-        times.forEach(([name, val]) => {
-           let [h, m] = (val as string).split(':').map(Number);
-           let d = new Date(now);
-           d.setHours(h, m, 0, 0);
-           if (d < now) d.setDate(d.getDate() + 1);
-           const diff = d.getTime() - now.getTime();
-           if (diff < minDiff) { minDiff = diff; nextPrayerDef = [name, val]; }
+        
+        times.forEach(([name, val]: any) => {
+            if (typeof val !== 'string' || !val.includes(':')) return;
+            let [h, m] = val.split(':').map(Number);
+            let d = new Date(now);
+            d.setHours(h, m, 0, 0);
+            if (d < now) d.setDate(d.getDate() + 1);
+            const diff = d.getTime() - now.getTime();
+            if (diff < minDiff) { 
+                minDiff = diff; 
+                nextPrayerDef = [name, val]; 
+            }
         });
-        return { name: nextPrayerDef[0], diffMs: minDiff };
+        
+        return nextPrayerDef ? { name: nextPrayerDef[0], diffMs: minDiff } : { name: '', diffMs: 0 };
     };
 
     const nextPrayer = getNextPrayerCountdown();
@@ -155,7 +182,8 @@ export default function Home() {
             <div className="relative flex h-auto min-h-screen w-full flex-col bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 overflow-x-hidden font-display transition-colors duration-300">
                 <Navbar />
 
-                <main className="px-6 md:px-20 lg:px-40 py-8 flex flex-col gap-8 max-w-[1440px] mx-auto w-full">
+                <main className="px-6 md:px-20 lg:px-40 py-8 mt-20 flex flex-col gap-8 max-w-[1440px] mx-auto w-full">
+
                     {/* Time and Date Section */}
                     <div className="flex flex-wrap justify-between items-center gap-4 bg-white dark:bg-surface-dark p-6 rounded-lg border border-slate-100 dark:border-border-dark shadow-sm">
                         <div className="flex flex-col gap-1">

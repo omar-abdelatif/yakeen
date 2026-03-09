@@ -45,7 +45,7 @@ export default function AzkarPage() {
             <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 transition-colors duration-300">
                 <Navbar />
                 
-                <main className="flex-1 px-4 lg:px-40 py-12 max-w-[1440px] mx-auto w-full">
+                <main className="flex-1 mt-20 px-4 lg:px-40 py-12 max-w-[1440px] mx-auto w-full">
                     <div className="flex flex-col md:flex-row gap-8">
                         <div className="flex-1">
                             <h1 className="text-4xl font-black mb-8">حصن المسلم</h1>
