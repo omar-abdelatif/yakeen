@@ -170,7 +170,7 @@ export default function Home() {
         return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
     };
 
-    const PRAYER_ARABIC: any = { 'Fajr': 'الفجر', 'Dhuhr': 'الظهر', 'Asr': 'العصر', 'Maghrib': 'المغرب', 'Isha': 'العشاء', 'Imsak': 'الإمساك' };
+    const PRAYER_ARABIC: any = { 'Fajr': 'الفجر', 'Sunrise': 'الشروق', 'Dhuhr': 'الظهر', 'Asr': 'العصر', 'Maghrib': 'المغرب', 'Isha': 'العشاء', 'Imsak': 'الإمساك' };
 
     const tasbihStrokeDashoffset = 552.92 - (tasbihCurrent / tasbihTarget) * 552.92;
 
@@ -210,9 +210,10 @@ export default function Home() {
                     </div>
 
                     {/* Prayer Times Grid */}
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                         {[
                             { key: 'Fajr', icon: 'wb_twilight', label: 'الفجر' },
+                            { key: 'Sunrise', icon: 'wb_sunny', label: 'الشروق' },
                             { key: 'Dhuhr', icon: 'light_mode', label: 'الظهر' },
                             { key: 'Asr', icon: 'sunny', label: 'العصر' },
                             { key: 'Maghrib', icon: 'wb_shade', label: 'المغرب' },
